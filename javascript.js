@@ -1,32 +1,24 @@
+let rock = document.getElementsByClassName("rock")[0];
+let paper = document.getElementsByClassName("paper")[0];
+let sccisors = document.getElementsByClassName("sccisors")[0];
+let userScoreText = document.getElementsByClassName("human_score")[0];
+let computerScoreText = document.getElementsByClassName("computer_score")[0];
+let resultDisplay = document.getElementsByClassName("result_display")[0];
+let playAgain = document.getElementsByClassName("another_game")[0];
+let button = document.getElementsByClassName("button")[0];
+let rockFn=null;
+let paperFn=null;
+let sccisorsFn=null;
+let buttonFN=null;
+
+
 function computerPlay () {
     let computerSelection = Math.floor(Math.random()*3+1);
     return computerSelection;
 }
 
-function userPlay () {
-    let promptInput = prompt("Rock paper or scissors","");
-    let userSelection = promptInput.toLowerCase();
-    if (userSelection == "rock") {
-        userSelection = 1; 
-    } 
-    else if (userSelection == "paper") {
-        userSelection = 2; 
-    } 
-    else if (userSelection == "scissors") {
-        userSelection = 3; 
-    }else {
-        userSelection  = 0;
-    }
-
-    return userSelection;
-}
-
-function playRound(){
-    let userMove=0;
+function playRound(userMove){
     let winner ="";
-    do{
-        userMove = userPlay();
-    }while(userMove==0);
     let computerMove = computerPlay();
     console.log(userMove+"  "+computerMove)
     if(computerMove == userMove){
@@ -80,28 +72,69 @@ function playRound(){
     }
 }
 
-function game (){
+function game (winner){
+
     let userScore=0,computerScore=0;
-    for (let i = 0; i < 5; i++) {
-        console.log("Round: "+(i+1)+"/5");
-        let winner=playRound();
-        if (winner == "Human") {
-            userScore++;
-        }
-        if (winner =="Computer") {
-            computerScore++;
-        }
-        
+    userScore=userScoreText.innerHTML;
+    computerScore=computerScoreText.innerHTML;
+    
+    if(winner=="Human"){
+        userScore++;
+        userScoreText.innerHTML=userScore;
     }
-    if (computerScore>userScore) {
-        console.log("Winner is Computer ! "+computerScore+"-"+userScore);
-    }
-    if (computerScore<userScore) {
-        console.log("Winner is Human ! "+userScore+"-"+computerScore);
+
+    if(winner=="Computer"){
+        computerScore++;
+        computerScoreText.innerHTML=computerScore;
     }
     
+    
+
+    if (computerScore>4) {
+        document.getElementsByClassName("winner_text")[0].innerHTML="Winner is Computer ! "+computerScore+"-"+userScore;
+        endGame();
+    
+
+    }else if (userScore>4) {
+        document.getElementsByClassName("winner_text")[0].innerHTML="Winner is Human ! "+computerScore+"-"+userScore;
+        endGame();
+    }
+}
+
+function endGame() {
+    resultDisplay.style.display = "none";
+    playAgain.style.display = "flex";
+    rock.removeEventListener("click",rockFn);
+    paper.removeEventListener("click",paperFn);
+    sccisors.removeEventListener("click",sccisorsFn);
+    userScoreText.innerHTML=0;
+    computerScoreText.innerHTML=0;
+}
+
+function newGame(){
+    resultDisplay.style.display = "flex";
+    playAgain.style.display = "none";
+    rock.addEventListener("click",rockFn);
+    paper.addEventListener("click",paperFn);
+    sccisors.addEventListener("click",sccisorsFn);
 
 }
 
 
-game ();
+
+rock.addEventListener("click",rockFn=function(){
+    game(playRound(1)); 
+});
+
+paper.addEventListener("click",paperFn=function(){
+    game(playRound(2));
+});
+
+sccisors.addEventListener("click",sccisorsFn=function(){
+    game(playRound(3));
+});
+
+button.addEventListener("click",buttonFn=function(){
+    newGame();
+})
+
